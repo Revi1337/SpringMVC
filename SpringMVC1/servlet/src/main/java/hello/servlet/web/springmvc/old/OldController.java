@@ -11,14 +11,15 @@ import org.springframework.web.servlet.mvc.Controller;
 @Component(value = "/springmvc/old-controller")
 public class OldController implements Controller {
 
-    // 어노테이션 기반 Controller 가 나오기전에 사용했던 컨트롤러 (HandlerMapping 을 따로 처리해야 함.)
-
     @Override
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView handleRequest(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
         System.out.println("OldController.handleRequest");
-        return null;
+        return new ModelAndView("new-form");
     }
 }
+
+// 어노테이션 기반 Controller 가 나오기전에 사용했던 컨트롤러 (HandlerMapping 을 따로 처리해야 함.)
 
 // TODO 해당 컨트롤러가 호출되려면 아래의 2가지가 필요.
 // 1. HandlerMapping(핸들러 매핑)
