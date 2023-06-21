@@ -1,9 +1,11 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -129,6 +131,62 @@ public class RequestParamController {
     public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
         log.info("username={}, age={}", paramMap.get("username"),
                 paramMap.get("age"));
+
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 를 사용하기 전에는 직접 Getter Setter 로 값을 대입하고 뽑아오고해야한다.
+     * 이 번거로운 과정을 자동화시켜주는 것이 @ModelAttribute 이다.
+     *
+     * @param username
+     * @param age
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-before")
+    public String beforeModelAttribute(@RequestParam String username, @RequestParam int age) {
+        HelloData helloData = new HelloData();
+        helloData.setUsername(username);
+        helloData.setAge(age);
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 의 사용 :
+     * Spring MVC 는 @ModelAttribute 가 있으면 다음을 실행한다.
+     * 1. HelloData 객체를 생성한다.
+     * 2. 요청 파라미터의 이름으로 HelloData 객체의 프로퍼티를 찾는다. 그리고 해당 프로퍼티의 setter 를 호출해서 파라미터의 값을 입력(바인딩) 한다.
+     * 예) 파라미터 이름이 username 이면 setUsername() 메서드를 찾아서 호출하면서 값을 입력한다.
+     * 따라서 Setter 는 꼭 필요하다.
+     *
+     * 또한, 기본적으로 HelloData 의 필드들은 required=false 로 동작한다.
+     * 그리고, int 같이 primitive 타입에 대해서도 값이 `age=` 가 아닌, `age` 파라미터 자체가 없을 시, 0 으로 세팅해준다.
+     * 조심해야 할것은 username= 처럼 빈값을 넣어주면, null 을 채워주지만, age= 처럼 int 에 빈값을 넣으면 Exception 이 터진다.
+     *
+     * @param helloData
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+        return "ok";
+    }
+
+    /**
+     * @ModelAttritube 는 생략해줄 수 있다. 이방법이 우리가 일반적으로 쓰는 방법이다.
+     * @param helloData
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
 
         return "ok";
     }
