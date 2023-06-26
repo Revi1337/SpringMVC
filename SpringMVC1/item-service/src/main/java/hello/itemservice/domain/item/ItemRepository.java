@@ -1,4 +1,4 @@
-package hello.itemservice.item;
+package hello.itemservice.domain.item;
 
 import org.springframework.stereotype.Repository;
 
