@@ -6,10 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,8 +42,78 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
+    /**
+     * V1 - @RequestParam 으로 모든 파라미터를 받은 후, Model 에 직접 등록
+     *
+     * @param itemName
+     * @param price
+     * @param quantity
+     * @param model
+     * @return
+     */
+//    @PostMapping("/add")
+    public String addItemV1(@RequestParam String itemName,
+                       @RequestParam int price,
+                       @RequestParam int quantity,
+                       Model model) {
+        Item item = new Item(itemName, price, quantity);
+        itemRepository.save(item);
+        model.addAttribute("item", item);
+        return "basic/item";
+    }
+
+    /**
+     * V2 - @ModelAttribute 를 사용하여 파라미터를 한번에 다 받음.
+     * 하지만, Model 에 직접 등록해주어야한다는 귀찮은 아직 존재함.
+     *
+     * @param item
+     * @param model
+     * @return
+     */
+//    @PostMapping("/add")
+    public String addItemV2(@ModelAttribute Item item, Model model) {
+        itemRepository.save(item);
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+    /**
+     * V3 - @ModelAttribute("item") 에 item 이라는 attr 를 설정하여, 자동으로 Model 에 item 이라는 이름의 attribute 를 추가시켜줌.
+     * @param item
+     * @return
+     */
+//    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute("item") Item item) {
+        itemRepository.save(item);
+
+        return "basic/item";
+    }
+
+    /**
+     * V4 - @ModelAttribute 에 attr 또한 설정하지않는 방법.
+     * attr 을 설정하지 않으면, @ModelAttribute 를 달아준 Class 의 첫번쨰 글자만 소문자로 바꾼 item 이라는 이름으로 Model 에 담아줌
+     * @param item
+     * @return
+     */
+//    @PostMapping("/add")
+    public String addItemV4(@ModelAttribute Item item) {
+        itemRepository.save(item);
+
+        return "basic/item";
+    }
+
+
+    /**
+     * V5 - 이게 최종. @ModelAttribute 마저 삭제.
+     * - @ModelAttribute 만 사라진것이기 떄문에 V4 와 동일하게 Item 클래스의 첫글자를 소문자로 바꾼 item 이름으로 Model 에 담아줌.
+     * @param item
+     * @return
+     */
     @PostMapping("/add")
-    public String save() {
-        return "basic/addForm";
+    public String addItemV5(Item item) {
+        itemRepository.save(item);
+
+        return "basic/item";
     }
 }
