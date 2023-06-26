@@ -14,6 +14,10 @@
     <div class="py-5 text-center">
         <h2>상품 상세</h2>
     </div>
+
+<!--    파라미터는 워낙 많이쓰이기 때문에, thymeleaf 에서는 param 으로 파라미터를 꺼내올수있게 지원한다.-->
+    <h2 th:if="${param.status}" th:text="'저장완료'"></h2>
+
     <div>
         <label for="itemId">상품 ID</label>
         <input type="text" id="itemId" name="itemId" class="form-control"
