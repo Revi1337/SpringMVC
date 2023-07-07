@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h4>Thymeleaf 가 지원하는 기본 객체 - Locale 정보는 은 Model 의 Attr 에 넣지않아도 바로 꺼내 쓸 수 있다.</h4>
+<ul>
+    <li>locale = <span th:text="${#locale}"></span></li>
+</ul>
+
+<h4>스프링 3.0 부터는 request, response, session, servletContext 에 대한 기본 객체들을 제공하지 않는다</h4>
+<h4><b>따라서 직접 Model 에 Attribute 로 등록해주어야 한다.</b></h4>
+<ul>
+    <li>request = <span th:text="${request}"></span></li>
+    <li>response = <span th:text="${response}"></span></li>
+    <li>servletContext = <span th:text="${servletContext}"></span></li>
+    <li>session = <span th:text="${session}"></span></li>
+</ul>
+
+<h4>param 정보와, session 정보, 그리고 Spring Bean 에 직접 접근</h4>
+<ul>
+    <li>Request Parameter = <span th:text="${param.paramData}"></span></li>
+    <li>session = <span th:text="${session.sessionData}"></span></li>
+    <li>spring bean = <span th:text="${@helloBean.hello('Spring!')}"></span></li>
+</ul>
+</body>
+</html>
