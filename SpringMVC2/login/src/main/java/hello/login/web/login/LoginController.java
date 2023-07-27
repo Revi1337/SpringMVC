@@ -1,14 +1,14 @@
-package hello.login.web.member;
+package hello.login.web.login;
 
 import hello.login.domain.login.LoginService;
 import hello.login.domain.member.Member;
-import hello.login.web.login.LoginForm;
+import hello.login.web.session.SessionManager;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +22,14 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    private final SessionManager sessionManager;
+
     @GetMapping("/login")
     public String loginForm(@ModelAttribute LoginForm loginForm) {
         return "login/loginForm";
     }
 
-    @PostMapping("/login")
+//    @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm loginForm,
                         BindingResult bindingResult,
                         HttpServletResponse httpServletResponse) {
@@ -48,6 +50,44 @@ public class LoginController {
         httpServletResponse.addCookie(idCookie);
         return "redirect:/";
     }
-}
 
-//        ResponseCookie idCookie = ResponseCookie.from("memberId", String.valueOf(loginMember.getId())).build()
+    //    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        expireCookie(response, "memberId");
+        return "redirect:/";
+    }
+
+    // 쿠키를 만료시킬때는 쿠키값에 null 을 넣어주고, Max-Age 를 0 으로 설정해주면 된다.
+    private void expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
+    // V2 ================================================================================================================================
+
+    @PostMapping("/login")
+    public String loginV2(@Valid @ModelAttribute LoginForm loginForm,
+                        BindingResult bindingResult,
+                        HttpServletResponse httpServletResponse) {
+        if (bindingResult.hasErrors())
+            return "login/loginForm";
+        Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "login/loginForm";
+        }
+
+        sessionManager.createSession(loginMember, httpServletResponse);
+
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/logout")
+    public String logoutV2(HttpServletRequest httpServletRequest) {
+        sessionManager.expire(httpServletRequest);
+        return "redirect:/";
+    }
+
+}
