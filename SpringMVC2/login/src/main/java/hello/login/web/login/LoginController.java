@@ -2,10 +2,12 @@ package hello.login.web.login;
 
 import hello.login.domain.login.LoginService;
 import hello.login.domain.member.Member;
+import hello.login.web.SessionConst;
 import hello.login.web.session.SessionManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +68,7 @@ public class LoginController {
 
     // V2 ================================================================================================================================
 
-    @PostMapping("/login")
+//    @PostMapping("/login")
     public String loginV2(@Valid @ModelAttribute LoginForm loginForm,
                         BindingResult bindingResult,
                         HttpServletResponse httpServletResponse) {
@@ -84,10 +86,45 @@ public class LoginController {
     }
 
 
-    @PostMapping("/logout")
+//    @PostMapping("/logout")
     public String logoutV2(HttpServletRequest httpServletRequest) {
         sessionManager.expire(httpServletRequest);
         return "redirect:/";
     }
 
+    // V3 ================================================================================================================================
+
+    @PostMapping("/login")
+    public String loginV3(@Valid @ModelAttribute LoginForm loginForm,
+                          BindingResult bindingResult,
+                          HttpServletRequest httpServletRequest) {
+        if (bindingResult.hasErrors())
+            return "login/loginForm";
+
+        Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "login/loginForm";
+        }
+
+        // 로그인 성공 처리
+        // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성
+        // httpServletRequest.getSession(true); --> 기존 세션이있으면 기존세션반환, 세션이없으면 새로운 세션 생성
+        // httpServletRequest.getSession(false); --> 기존 세션이있으면 기존세션반환, 세션이없어도 세션을 생성하지 않고 null 반환
+        // 디폴트는 true 이기때문에 httpServletRequest.getSession() 으로 사용
+        HttpSession session = httpServletRequest.getSession();
+        // 세션에 로그인 회원 정볼르 보관
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/logout")
+    public String logoutV3(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null)
+            session.invalidate();
+        return "redirect:/";
+    }
 }
