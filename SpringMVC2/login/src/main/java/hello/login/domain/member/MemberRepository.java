@@ -22,9 +22,9 @@ public class MemberRepository {
         return store.get(id);
     }
 
-    public Optional<Member> findByLongId(String loginId) {
+    public Optional<Member> findByLoginId(String loginId) {
         return findAll().stream()
-                .filter(memberId -> memberId.equals(loginId))
+                .filter(memberId -> memberId.getLoginId().equals(loginId))
                 .findFirst();
     }
 
