@@ -50,7 +50,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                                 HttpServletResponse response,
                                 Object handler,
                                 Exception ex) throws Exception {
-        // View 까지 렌더링하고 호출됨.
+        // View 까지 렌더링하고 호출됨. (정확히는 화면에 나타나기 전이지만, 렌더링은 다 완료된 상태.)
         String requestURI = request.getRequestURI();
         String logId = (String) request.getAttribute(LOG_ID);
         log.info("RESPONSE [{}] [{}] [{}]", logId, requestURI, handler);
