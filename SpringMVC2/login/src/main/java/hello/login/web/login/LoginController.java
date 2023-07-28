@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -94,7 +95,7 @@ public class LoginController {
 
     // V3 ================================================================================================================================
 
-    @PostMapping("/login")
+//    @PostMapping("/login")
     public String loginV3(@Valid @ModelAttribute LoginForm loginForm,
                           BindingResult bindingResult,
                           HttpServletRequest httpServletRequest) {
@@ -126,5 +127,33 @@ public class LoginController {
         if (session != null)
             session.invalidate();
         return "redirect:/";
+    }
+
+    // V4 ================================================================================================================================
+
+    @PostMapping("/login")
+    public String loginV4(@Valid @ModelAttribute LoginForm loginForm,
+                          @RequestParam(defaultValue = "/") String redirectURL,
+                          BindingResult bindingResult,
+                          HttpServletRequest httpServletRequest) {
+        if (bindingResult.hasErrors())
+            return "login/loginForm";
+
+        Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "login/loginForm";
+        }
+
+        // 로그인 성공 처리
+        // 세션이 있으면 세션 반환, 없으면 신규 세션을 생성
+        // httpServletRequest.getSession(true); --> 기존 세션이있으면 기존세션반환, 세션이없으면 새로운 세션 생성
+        // httpServletRequest.getSession(false); --> 기존 세션이있으면 기존세션반환, 세션이없어도 세션을 생성하지 않고 null 반환
+        // 디폴트는 true 이기때문에 httpServletRequest.getSession() 으로 사용
+        HttpSession session = httpServletRequest.getSession();
+        // 세션에 로그인 회원 정볼르 보관
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+
+        return "redirect:" + redirectURL;
     }
 }
