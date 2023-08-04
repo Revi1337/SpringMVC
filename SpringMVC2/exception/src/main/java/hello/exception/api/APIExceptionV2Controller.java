@@ -13,27 +13,27 @@ import org.springframework.web.bind.annotation.*;
 @RestController @Slf4j
 public class APIExceptionV2Controller {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ErrorResult illegalExceptionHandler(IllegalArgumentException exception) {
-        log.error("[exceptionHandler] ex", exception);
-        return new ErrorResult("BAD", exception.getMessage());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResult> userExHandler(UserException exception) {
-        log.error("[exceptionHandler] ex", exception);
-        ErrorResult errorResult = new ErrorResult("USER-EX", exception.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ErrorResult exHandler(Exception exception) {
-        log.error("[exceptionHandler] ex", exception);
-        ErrorResult errorResult = new ErrorResult("EX", "내부 오류");
-        return errorResult;
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ErrorResult illegalExceptionHandler(IllegalArgumentException exception) {
+//        log.error("[exceptionHandler] ex", exception);
+//        return new ErrorResult("BAD", exception.getMessage());
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResult> userExHandler(UserException exception) {
+//        log.error("[exceptionHandler] ex", exception);
+//        ErrorResult errorResult = new ErrorResult("USER-EX", exception.getMessage());
+//        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler
+//    public ErrorResult exHandler(Exception exception) {
+//        log.error("[exceptionHandler] ex", exception);
+//        ErrorResult errorResult = new ErrorResult("EX", "내부 오류");
+//        return errorResult;
+//    }
 
     @GetMapping("/api2/members/{id}")
     public MemberDto getMember(@PathVariable String id) {
