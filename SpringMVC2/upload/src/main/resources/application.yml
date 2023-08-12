@@ -1,11 +1,14 @@
-logging:
-  level:
-    org:
-      apache:
-        coyote:
-          http11: debug
+#logging:
+#  level:
+#    org:
+#      apache:
+#        coyote:
+#          http11: debug
 
 spring:
   servlet:
     multipart:
       enabled: true
+
+file:
+  dir: D:\SpringMVC\upload_dir\
