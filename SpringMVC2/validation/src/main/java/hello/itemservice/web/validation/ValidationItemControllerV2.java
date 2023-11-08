@@ -50,6 +50,8 @@ public class ValidationItemControllerV2 {
      * - objectName : @ModelAttribute 이름
      * - field : 오류가 발생한 필드 이름
      * - defaultMessage : 오류 기본 메시지
+     *
+     * BindingResult 는 검증할 대상 바로 다음에 와야 한다. 순서가 중요하다. @ModelAttribute Item item 바로 다음에 BindingResult 가 와야 한다.
      * @param item
      * @param bindingResult
      * @param redirectAttributes
