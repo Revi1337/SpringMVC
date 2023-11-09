@@ -207,7 +207,10 @@ public class ValidationItemControllerV2 {
     /**
      * reject() 는 Object 이고, rejectValue() 는 Field 이다.
      * - rejectValue(), reject() 의 errorCode 는 MessageCodeResolver 를 통해 해석되고 동작한다.
-     * - 지금은 "errorCode.objectName.fieldName" 포맷으로 에러코드를 찾는다고만 이해하자. (더 중요한 내용이 있긴함 이건 나중에)
+     *
+     * - rejectValue(), reject() 의 errorCode 를 사용하면 "errorCode.objectName.fieldName" 포맷으로 에러코드를 찾는다.
+     * - errorCode.objectName.fieldName 로 이루어진 메시지가 있으면 해당 메시지가 우선순위를 갖게되고, 없으면, errorCode 라는 메시지가 사용된다.
+     * - --> 즉, 계층적인 구조를 갖게되고, 우선순위에 따라 사용할 수 있다는 것이다. 이것을 가능하게 하는 것이 MessageCodesResolver 이다.
      * @param item
      * @param bindingResult
      * @param redirectAttributes
