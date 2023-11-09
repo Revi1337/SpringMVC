@@ -2,6 +2,4 @@
 2 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 를 이용 디폴트 메시지 추가)
 3 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 에 기존값 상태 유지 추가)
 4 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 에 errorCode 와 arguments 추가)
-5 단계. BindingResult 를 통해 사용. (reject(), rejectValue() 를 이용하여 메시지화.)
-
-MessageCodesResolver 를 이해해야 한다.
+5 단계. BindingResult 를 통해 사용. (reject(), rejectValue() 를 이용하여 메시지화. MessageCodesResolver 이해 필요)
