@@ -16,3 +16,7 @@
             --> 주의할것은 BeanValidator 가 자동등록되지않음. --> 이거 주의할것. 참고로 글로벌 설정은 잘 사용안함.
     참고 : @Validated = 스프링 전용 검증 어노테이션, @Validate = 자바 표준 검증 어노테이션.(의존성 추가 필요)
 
+
+// 중요한것 및 정리
+1. BindingResult 가 없으면 --> 400 이 발생하면서 Controller 가 호출되지않고 오류페이지로 이동
+2. BindingResult 가 있으면 --> 오류정보 (FieldError) 를 BindingResult 에 담아 Controller 를 정상 호출.
