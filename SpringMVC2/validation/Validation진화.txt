@@ -4,3 +4,15 @@
 4 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 에 errorCode 와 arguments 추가)
 5 단계. BindingResult 를 통해 사용. (reject(), rejectValue() 를 이용하여 메시지화. MessageCodesResolver 이해 필요)
 6 단계. Validator 를 구현하여 Custom Validator 를 만들고, 검증 로직을 Controller 에서 분리 (Custom Validator 는 @Bean 혹은 @ComponentScan 으로 빈 등록 후, Controller 에서 주입받아 사용하면 된다.)
+7 단계. @InitBinder, WebDataBinder, 그리고 @Validated(혹은 @Validate) 를 사용하여 특정 컨트롤러가 호출될때마다 Validator 가 등록되어 동작하게 설정.
+    원리 : Controller 가 호출될때마다 WebDataBinder 가 새롭게 만들어지고 Validator 가 등록되고 @Validated 로 인해 검증기가 동작하는 원리
+        --> 6단계와 다르게 메서드에서 직접 .validate() 를 호출하지 않아도 된다.
+        --> @Validated 는 Validator 를 실행하라는 어노테이션이다.
+            해당 어노테이션이 붙으면 WebDataBinder 에 등록한 Validator 를 찾아서 실행한다. 근데 만약 여러 검증기가 등록되어있다면 어떤 검증기를 실행할지
+            구분이 필요하다. 이 때 Validator 의 Override 메서드인 supports() 가 사용된다.
+        --> 특정한 Validator 를 모든 Controller 에 Global 하게 적용하고 싶으면 Controller 에 @InitBinder 를 제거하고
+            WebMvcConfigurer 를 Impl 하여 getValidator() 를 Override 하고 적용하고 싶은 Validator 를 return 해주면 된다.
+            그래도 @Validated 는 붙여야 동작한다.
+            --> 주의할것은 BeanValidator 가 자동등록되지않음. --> 이거 주의할것. 참고로 글로벌 설정은 잘 사용안함.
+    참고 : @Validated = 스프링 전용 검증 어노테이션, @Validate = 자바 표준 검증 어노테이션.(의존성 추가 필요)
+
