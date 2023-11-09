@@ -3,3 +3,4 @@
 3 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 에 기존값 상태 유지 추가)
 4 단계. BindingResult 를 통해 사용. (new FieldError() 와, new ObjectError() 에 errorCode 와 arguments 추가)
 5 단계. BindingResult 를 통해 사용. (reject(), rejectValue() 를 이용하여 메시지화. MessageCodesResolver 이해 필요)
+6 단계. Validator 를 구현하여 Custom Validator 를 만들고, 검증 로직을 Controller 에서 분리 (Custom Validator 는 @Bean 혹은 @ComponentScan 으로 빈 등록 후, Controller 에서 주입받아 사용하면 된다.)
