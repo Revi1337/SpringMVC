@@ -50,3 +50,12 @@
 6. Bean Validation 메시지화 Arguments
 --> Bean Validation 을 {name}.properties 에 메시지화할 때 Arguments 들의 순서가 있음.
     {0} 는 field 이름(오류가 난 필드이름). 나머지 {2}, {1} 은 속성의 알파벳 순. 만약 @Range 의 max 와 min 속성이 있으면 max 가 {1}. min 이 {2})
+
+
+7. Bean Validation 에서 ObjectError 일때 @ScriptAssert 의 사용
+--> ObjectError 일때는 @ScriptAssert 를 통해서 검증할 수 있음
+--> 예를 들어 Item 클래스의 price 필드와 quantity 필드의 곱인 총 가격이 10000 원을 넘어야하고 이를 검증하자고할때, @ScriptAssert 를 사용할 수 있음.
+
+    주의: 스프링 부트 3.0.1 이상부터 @ScriptAssert 의 javascript 엔진을 사용할 수 없음.
+         --> 자바 11 에서는 사용가능하지만. 스플이 3.0.0 이상부터는 자바 17 이 필수이기때문에 사용이 불가능함.
+    결론: 사실 ObjectError 는 @ScriptAssert 를 억지로 사용하는것보다 직접 자바 코드로 작성하는 것을 권장한다.

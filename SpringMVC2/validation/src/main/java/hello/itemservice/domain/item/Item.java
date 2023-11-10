@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotNull;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;   // org.hibernate.validator 는 Hibernate Validator 에서만 동작.
+import org.hibernate.validator.constraints.ScriptAssert;
 
 @Data
+//@ScriptAssert(lang = "javascript", script = "_this.price * _this.quantity >= 10000", message = "총합이 10000 원 넘게 입력해주세요")
 public class Item {
 
     private Long id;
