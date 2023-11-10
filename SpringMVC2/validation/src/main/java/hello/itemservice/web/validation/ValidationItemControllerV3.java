@@ -2,6 +2,8 @@ package hello.itemservice.web.validation;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.SaveCheck;
+import hello.itemservice.domain.item.UpdateCheck;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +44,36 @@ public class ValidationItemControllerV3 {
         return "validation/v3/addForm";
     }
 
-    @PostMapping("/add")
-    public String addItemV6(@Validated @ModelAttribute Item item,
+//    @PostMapping("/add")
+    public String addItem(@Validated @ModelAttribute Item item,
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes) {
+
+        // 특정 필드가 아닌 복합 룰 검증 (Bean Validation 에서 ObjectError 를 잡고자할때는 @ScriptAssert 를 억지로 사용하지말고 자바 코드로 구현하는것이 권장된다.)
+        if (item.getPrice() != null && item.getQuantity() != null) {
+            int resultPrice = item.getPrice() * item.getQuantity();
+            if (resultPrice < 10000) {
+                bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+            }
+        }
+
+        // 검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {
+            log.info("errors = {}", bindingResult);
+            return "validation/v3/addForm";
+        }
+
+        // 성공 로직
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v3/items/{itemId}";
+    }
+
+    @PostMapping("/add")
+    public String addItem2(@Validated(SaveCheck.class) @ModelAttribute Item item,
+                          BindingResult bindingResult,
+                          RedirectAttributes redirectAttributes) {
 
         // 특정 필드가 아닌 복합 룰 검증 (Bean Validation 에서 ObjectError 를 잡고자할때는 @ScriptAssert 를 억지로 사용하지말고 자바 코드로 구현하는것이 권장된다.)
         if (item.getPrice() != null && item.getQuantity() != null) {
@@ -75,10 +103,35 @@ public class ValidationItemControllerV3 {
         return "validation/v3/editForm";
     }
 
-    @PostMapping("/{itemId}/edit")
+//    @PostMapping("/{itemId}/edit")
     public String edit(
             @PathVariable Long itemId,
             @Valid @ModelAttribute Item item,
+            BindingResult bindingResult
+    ) {
+        // 특정 필드가 아닌 복합 룰 검증 (Bean Validation 에서 ObjectError 를 잡고자할때는 @ScriptAssert 를 억지로 사용하지말고 자바 코드로 구현하는것이 권장된다.)
+        if (item.getPrice() != null && item.getQuantity() != null) {
+            int resultPrice = item.getPrice() * item.getQuantity();
+            if (resultPrice < 10000) {
+                bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+            }
+        }
+
+        // 검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {
+            log.info("errors = {}", bindingResult);
+            return "validation/v3/editForm";
+        }
+
+        itemRepository.update(itemId, item);
+        return "redirect:/validation/v3/items/{itemId}";
+    }
+
+
+    @PostMapping("/{itemId}/edit")
+    public String edit2(
+            @PathVariable Long itemId,
+            @Validated(UpdateCheck.class) @ModelAttribute Item item,
             BindingResult bindingResult
     ) {
         // 특정 필드가 아닌 복합 룰 검증 (Bean Validation 에서 ObjectError 를 잡고자할때는 @ScriptAssert 를 억지로 사용하지말고 자바 코드로 구현하는것이 권장된다.)
