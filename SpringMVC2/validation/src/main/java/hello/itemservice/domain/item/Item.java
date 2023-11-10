@@ -1,5 +1,6 @@
 package hello.itemservice.domain.item;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;  // jakarta.validation 어떤 구현체든 동작 (Java Validator, Hibernate Validator)
 import jakarta.validation.constraints.NotNull;
 
@@ -17,6 +18,9 @@ public class Item {
     @NotNull
     @Range(min = 1000, max = 1000000)
     private Integer price;
+
+    @NotNull
+    @Max(9999)
     private Integer quantity;
 
     public Item() {

@@ -46,3 +46,7 @@
     예: itemName 에 문자 A 입력 --> 타입 변환 성공 -> itemName 필드에 BeanValidation 적용
         price 에 문자 A 입력 --> "A" 를 숫자 타입 변환 시도 실패 --> typeMismatch FiledError 추가 --> price 필드는 BeanValidation 적용 X
 
+
+6. Bean Validation 메시지화 Arguments
+--> Bean Validation 을 {name}.properties 에 메시지화할 때 Arguments 들의 순서가 있음.
+    {0} 는 field 이름(오류가 난 필드이름). 나머지 {2}, {1} 은 속성의 알파벳 순. 만약 @Range 의 max 와 min 속성이 있으면 max 가 {1}. min 이 {2})
