@@ -12,6 +12,10 @@
         --> 하이버네이트 검증기에서만 동작한다.
         --> Ex. @Range 등등
 
+    정리:
+        --> jakarta.validation-api : Bean Validation 인터페이스
+        --> hibernate-validator : 구현체
+
 
 2. 검증 어노테이션
 @NotBlank : 빈값 + 공백만 있는 경우를 허용하지 않는다.
