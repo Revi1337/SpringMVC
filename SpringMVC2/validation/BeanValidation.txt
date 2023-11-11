@@ -71,5 +71,6 @@
     --> 코드의 복잡성이 늘어나기때문에 잘 사용되지 않고, 실무에서는 등록용 폼 과 수정용 폼 객체를 분리해서 사용함.
 
 
-
-
+9. 정보
+https://docs.jboss.org/hibernate/validator/6.2/reference/en-US/html_single/
+--> 검증 어노테이션들 모음
